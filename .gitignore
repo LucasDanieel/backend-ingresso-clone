@@ -1,0 +1,17 @@
+# Ignorar arquivos de build
+bin/
+obj/
+
+# Ignorar configurações sensíveis
+appsettings.json
+appsettings.Development.json
+
+# Ignorar diretórios de pacotes
+.vs
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
