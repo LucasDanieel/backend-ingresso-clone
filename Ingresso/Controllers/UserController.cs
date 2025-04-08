@@ -1,4 +1,4 @@
-﻿using Ingresso.Application.DTOs;
+﻿using Ingresso.Application.DTOs.UserDTOs;
 using Ingresso.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

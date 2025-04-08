@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
+using Ingresso.Application.DTOs.UserDTOs;
 
-namespace Ingresso.Application.DTOs.Validations
+namespace Ingresso.Application.DTOs.Validations.UserValidations
 {
     public class UserUpdateDTOValidator : AbstractValidator<UserDTO>
     {

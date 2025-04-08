@@ -54,7 +54,7 @@ namespace Ingresso.Infra.Data.Maps
                 .IsRequired()
                 .HasDefaultValue(false)
                 .HasColumnName("receber_notificacao");
-            
+
             builder.Property(x => x.UserValid)
                 .IsRequired()
                 .HasDefaultValue(false)
@@ -68,7 +68,9 @@ namespace Ingresso.Infra.Data.Maps
                 address.Property(a => a.Street)
                     .HasMaxLength(50)
                     .HasColumnName("rua");
-                address.Property(a => a.HouseNumber).HasColumnName("numero_casa");
+                address.Property(a => a.HouseNumber)
+                    .HasMaxLength(10)
+                    .HasColumnName("numero_casa");
                 address.Property(a => a.Complement)
                     .HasMaxLength(100)
                     .HasColumnName("complemento");

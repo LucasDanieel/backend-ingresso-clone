@@ -1,11 +1,11 @@
-﻿using Ingresso.Application.DTOs;
+﻿using Ingresso.Application.DTOs.UserDTOs;
 
 namespace Ingresso.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<ResultService<string>> LoginUserAsync(UserLoginDTO userLoginDTO);
-        Task<ResultService<string>> LoginViaGoogleAsync(string email);
+        Task<ResultService<AuthenticatedUserDTO>> LoginUserAsync(UserLoginDTO userLoginDTO);
+        Task<ResultService<AuthenticatedUserDTO>> LoginViaGoogleAsync(string email);
         Task<ResultService<AuthenticatedUserDTO>> AuthUserAsync(string token);
         Task<ResultService<UserDTO>> GetUserProfileAsync(string token);
         Task<ResultService> CreateUserAsync(UserDTO userDTO);

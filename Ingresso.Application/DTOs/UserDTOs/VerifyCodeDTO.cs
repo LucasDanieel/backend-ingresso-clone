@@ -1,4 +1,4 @@
-﻿namespace Ingresso.Application.DTOs
+﻿namespace Ingresso.Application.DTOs.UserDTOs
 {
     public class VerifyCodeDTO
     {

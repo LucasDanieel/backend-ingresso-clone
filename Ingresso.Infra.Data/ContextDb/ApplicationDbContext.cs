@@ -8,6 +8,12 @@ namespace Ingresso.Infra.Data.ContextDb
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
 
+        public DbSet<Cinema> Cinemas { get; set; }
+        public DbSet<CinemaRoom> CinemaRooms { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<MovieDescription> MovieDescriptions { get; set; }
+        public DbSet<Session> Sessions { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

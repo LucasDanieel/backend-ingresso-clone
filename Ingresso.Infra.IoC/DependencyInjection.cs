@@ -5,8 +5,10 @@ using Ingresso.Application.Caching.Interfaces;
 using Ingresso.Application.Mappings;
 using Ingresso.Application.Services;
 using Ingresso.Application.Services.Interfaces;
+using Ingresso.Domain.Integrations;
 using Ingresso.Domain.Repository;
 using Ingresso.Infra.Data.ContextDb;
+using Ingresso.Infra.Data.Integrations;
 using Ingresso.Infra.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,8 +22,14 @@ namespace Ingresso.Infra.IoC
         {
             services.AddDbContext<ApplicationDbContext>(opt => opt.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<ICinemaRepository, CinemaRepository>();
+            services.AddScoped<ICinemaRoomRepository, CinemaRoomRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<IMovieRepository, MovieRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<ITokenGenerator, TokenGenerator>();
+            services.AddScoped<ISaveCloudinary, SaveCloudinary>();
             //services.AddScoped<ICachingService, CachingService>();
 
             return services;
@@ -30,9 +38,14 @@ namespace Ingresso.Infra.IoC
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAutoMapper(typeof(DomainToDtoMapping));
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICinemaRoomService, CinemaRoomService>();
+            services.AddScoped<ICinemaService, CinemaService>();
+            services.AddScoped<ICityService, CityService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IRecaptchaService, RecaptchaService>();
+            services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }

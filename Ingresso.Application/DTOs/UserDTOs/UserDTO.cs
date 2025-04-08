@@ -1,7 +1,6 @@
-﻿
-using Ingresso.Domain.Entities;
+﻿using Ingresso.Domain.Entities;
 
-namespace Ingresso.Application.DTOs
+namespace Ingresso.Application.DTOs.UserDTOs
 {
     public class UserDTO
     {

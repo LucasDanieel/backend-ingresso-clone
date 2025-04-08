@@ -36,9 +36,12 @@ namespace Ingresso.Domain.Entities
             UserValid = userValid;
         }
 
-        public void HasingPassword()
+        public void HasingPassword(string? newPassword = null)
         {
-            Password = BCrypt.Net.BCrypt.HashPassword(Password, 12);
+            if (!string.IsNullOrEmpty(newPassword))
+                Password = BCrypt.Net.BCrypt.HashPassword(newPassword, 12);
+            else
+                Password = BCrypt.Net.BCrypt.HashPassword(Password, 12);
         }
 
         public bool VerifyPassword(string password)
@@ -49,11 +52,6 @@ namespace Ingresso.Domain.Entities
         public void ChangeUserValid()
         {
             UserValid = true;
-        }
-
-        public void ChangePassword(string newPassword)
-        {
-            Password = newPassword;
         }
     }
 }

@@ -3,7 +3,8 @@ using AutoMapper;
 using Ingresso.Application.Authentication.Interfaces;
 using Ingresso.Application.Caching.Interfaces;
 using Ingresso.Application.DTOs;
-using Ingresso.Application.DTOs.Validations;
+using Ingresso.Application.DTOs.UserDTOs;
+using Ingresso.Application.DTOs.Validations.UserValidations;
 using Ingresso.Application.Services.Interfaces;
 using Ingresso.Domain.Entities;
 using Ingresso.Domain.Repository;
@@ -27,10 +28,10 @@ namespace Ingresso.Application.Services
             //_caching = caching;
         }
 
-        public async Task<ResultService<string>> LoginUserAsync(UserLoginDTO userLoginDTO)
+        public async Task<ResultService<AuthenticatedUserDTO>> LoginUserAsync(UserLoginDTO userLoginDTO)
         {
             if (userLoginDTO == null)
-                return ResultService.Fail<string>("Objeto vazio");
+                return ResultService.Fail<AuthenticatedUserDTO>("Objeto vazio");
 
             User user = null;
 
@@ -40,15 +41,15 @@ namespace Ingresso.Application.Services
                 user = await _userRepository.GetByCPFAsync(userLoginDTO.CPF);
 
             if (user == null)
-                return ResultService.Fail<string>("Usuario não encontrado");
+                return ResultService.Fail<AuthenticatedUserDTO>("Usuario não encontrado");
 
             if (!user.UserValid)
-                return ResultService.Fail<string>("Usuario não confirmado");
+                return ResultService.Fail<AuthenticatedUserDTO>("Usuario não confirmado");
 
             bool isValid = user.VerifyPassword(userLoginDTO.Password);
 
             if (!isValid)
-                return ResultService.Fail<string>("Senha errada");
+                return ResultService.Fail<AuthenticatedUserDTO>("Senha errada");
 
             //string code = RandomNumberGenerator.GetInt32(100000, 999999).ToString();
 
@@ -56,22 +57,28 @@ namespace Ingresso.Application.Services
 
             //await _emailService.SendVerificationCodeAsync(user.Email, code);
 
-            return ResultService.Ok<string>(user.Email);
+            AuthenticatedUserDTO userDTO = _mapper.Map<AuthenticatedUserDTO>(user);
+
+            return ResultService.Ok<AuthenticatedUserDTO>(userDTO);
         }
 
-        public async Task<ResultService<string>> LoginViaGoogleAsync(string email)
+        public async Task<ResultService<AuthenticatedUserDTO>> LoginViaGoogleAsync(string email)
         {
             User user = await _userRepository.GetByEmailAsync(email);
 
             if (user == null)
-                return ResultService.Fail<string>("Usuario não encontrado");
+                return ResultService.Fail<AuthenticatedUserDTO>("Usuario não encontrado");
 
             if (user.UserValid == false)
-                return ResultService.Fail<string>("Usuario não confirmado");
+                return ResultService.Fail<AuthenticatedUserDTO>("Usuario não confirmado");
 
             string token = _tokenGenerator.GenerateLoginToken(user);
 
-            return ResultService.Ok<string>(token);
+            AuthenticatedUserDTO userDTO = _mapper.Map<AuthenticatedUserDTO>(user);
+
+            userDTO.Token = token;
+
+            return ResultService.Ok<AuthenticatedUserDTO>(userDTO);
         }
 
         public async Task<ResultService<AuthenticatedUserDTO>> AuthUserAsync(string token)
@@ -186,10 +193,10 @@ namespace Ingresso.Application.Services
 
             User user = await _userRepository.GetByEmailAsync(changePasswordDTO.Email);
 
-            if(user == null)
+            if (user == null)
                 return ResultService.Fail("Usuario não encontrado");
 
-            if(!user.UserValid)
+            if (!user.UserValid)
                 return ResultService.Fail("Usuario não confirmado");
 
             bool validPassword = user.VerifyPassword(changePasswordDTO.OldPassword);
@@ -197,9 +204,7 @@ namespace Ingresso.Application.Services
             if (!validPassword)
                 return ResultService.Fail("Senha inválida");
 
-            user.ChangePassword(changePasswordDTO.NewPassword);
-
-            user.HasingPassword();
+            user.HasingPassword(changePasswordDTO.NewPassword);
 
             await _userRepository.UpdateUserAsync(user);
 

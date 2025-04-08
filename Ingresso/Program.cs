@@ -1,5 +1,8 @@
+using System;
 using brevo_csharp.Client;
+using Ingresso.Infra.Data.ContextDb;
 using Ingresso.Infra.IoC;
+using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,9 @@ builder.Services.AddCors(opt => opt.AddPolicy("CorsPolicy", build =>
 {
     build.WithOrigins(builder.Configuration["MySettings:FrontEndUrl"]).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
 }));
+
+var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
 
 var app = builder.Build();
 
